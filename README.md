@@ -1,6 +1,8 @@
 # Welcome to RWLmodel pages
 
-
+```{r}
+devtools::install_github('santosneto/RWLmodel')
+```
 
 
 
