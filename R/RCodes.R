@@ -206,11 +206,11 @@ hRWL <- function(x, mu, sigma, log.h = FALSE)
 #'
 RWL <- function (mu.link = "log" , sigma.link="log")
 {
-  mstats = checklink("mu.link", "BirnbaumSaunders", substitute(mu.link),
+  mstats = checklink("mu.link", "Reparameterized Weighted Lindley", substitute(mu.link),
                      c("sqrt","log","identity"))
-  dstats = checklink("sigma.link", "BirnbaumSaunders", substitute(sigma.link)
+  dstats = checklink("sigma.link", "Reparameterized Weighted Lindley", substitute(sigma.link)
                      ,c("sqrt", "log", "identity"))
-  structure(list(family = c("RBS","BirnbaumSaunders"),
+  structure(list(family = c("RWL","Reparameterized Weighted Lindley"),
                  parameters = list(mu=TRUE,sigma=TRUE),
                  nopar = 2,
                  type = "Continuous",
