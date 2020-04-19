@@ -60,15 +60,15 @@ meanRWL(obj)
 
 \item{log.h, }{log.p logical; if TRUE, hazard h are given as log(h).}
 
-\item{from}{where to start plotting the distribution from}
+\item{from}{where to start plotting the distribution from.}
 
-\item{to}{up to where to plot the distribution}
+\item{to}{up to where to plot the distribution.}
 
 \item{title}{the title of the plot.}
 
-\item{...}{other graphical parameters for plotting}
+\item{...}{other graphical parameters for plotting.}
 
-\item{obj}{a fitted RBS object}
+\item{obj}{a fitted RBS object.}
 }
 \value{
 returns a \code{gamlss.family} object which can be used to fit a reparameterized weighted Lindley distribution in the \code{gamlss()} function.

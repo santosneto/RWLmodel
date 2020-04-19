@@ -32,10 +32,10 @@
 #' @param lower.tail logical; if TRUE (default), probabilities are P[X <= x], otherwise, P[X > x]
 #' @param p vector of probabilities.
 #' @param n number of observations. If \code{length(n) > 1}, the length is taken to be the number required.
-#' @param from where to start plotting the distribution from
-#' @param to up to where to plot the distribution
-#' @param obj a fitted RBS object
-#' @param ... other graphical parameters for plotting
+#' @param from where to start plotting the distribution from.
+#' @param to up to where to plot the distribution.
+#' @param obj a fitted RBS object.
+#' @param ... other graphical parameters for plotting.
 #' @param title the title of the plot.
 #'
 #'
