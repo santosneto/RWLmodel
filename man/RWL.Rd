@@ -64,26 +64,26 @@ meanRWL(obj)
 
 \item{to}{up to where to plot the distribution.}
 
-\item{title}{the title of the plot.}
+\item{title}{title of the plot.}
 
 \item{...}{other graphical parameters for plotting.}
 
-\item{obj}{a fitted RBS object.}
+\item{obj}{a fitted RWL object.}
 }
 \value{
 returns a \code{gamlss.family} object which can be used to fit a reparameterized weighted Lindley distribution in the \code{gamlss()} function.
 }
 \description{
-The fuction \code{RWL()} defines the BS distribution, a two paramenter
+The fuction \code{RWL()} defines the RWL distribution, a two paramenter
 distribution, for a gamlss.family object to be used in GAMLSS fitting using using the
 function \code{gamlss()}, with mean equal to the parameter \code{mu} and \code{sigma}
-equal the precision parameter. The functions \code{dRWL}, \code{pWL}, \code{qRWL} and
-\code{rRWL} define the density, distribution function, quantile function and random
-genetation for the \code{RWL} parameterization of the RWL distribution.
+equal the precision parameter. The functions \code{dRWL}, \code{pWL}, \code{qRWL},
+\code{rRWL} and \code{hRWL} define the density, distribution function, quantile function, random
+genetation and hazard function for the \code{RWL} parameterization of the RWL distribution.
 }
 \note{
 For the function RWL(), mu is the mean and sigma is the precision parameter of the reparameterized weighted Lindley distribution.
 }
 \author{
-Manoel Santos-Neto \email{manoel.ferreira@ufcg.edu.br}
+Manoel Santos-Neto \email{santosnetoce at protemail.com}
 }
