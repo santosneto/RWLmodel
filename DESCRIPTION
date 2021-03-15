@@ -1,16 +1,16 @@
 Package: RWLmodel
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
+Title: Weighted Lindley regression model
+Version: 0.0.9
 Date: 2020-04-19
 Author: Manoel Santos Neto [aut, cre] 
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-Depends: R (>= 3.1.2), stats, graphics
+Depends: R (>= 3.1.2), stats, graphics, Deriv, dplyr, pracma
 Imports: gamlss, ggplot2, LindleyR, gamlss.dist
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: testthat
