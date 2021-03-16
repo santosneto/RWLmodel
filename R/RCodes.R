@@ -166,8 +166,8 @@ RWL <- function (mu.link = "log" , sigma.link="log")
                  G.dev.incr = function(y,mu,sigma,...) -2*dRWL(y,mu,sigma,log.d = TRUE),
                  rqres = expression(rqres(pfun = "pRWL", type = "Continuous", y = y, mu = mu, sigma = sigma)),
                  mu.initial = expression({mu <- (y + mean(y)/2)  }),
-                 sigma.initial = expression({sigma <- rep(sd(y),length(y)) }),
-                 mu.valid = function(mu) all(mu>0) ,
+                 sigma.initial = expression({sigma <- rep(var(y)+0.01,length(y)) }),
+                 mu.valid = function(mu) all(mu > 0) ,
                  sigma.valid = function(sigma) all(sigma > 0),
                  y.valid = function(y) all(y > 0),
                  mean = function(mu,sigma) mu,
@@ -193,11 +193,11 @@ RWL <- function (mu.link = "log" , sigma.link="log")
 #'@export
 
 
-dRWL <- function(x,mu=1,sigma=1,log.d=FALSE)
+dRWL <- function(x, mu = 1, sigma = 1, log.d = FALSE)
 {
-  theta <- (sigma*(1-mu) + sqrt(sigma*sigma*(mu-1)*(mu-1) + 4*mu*sigma*(sigma+1)))/(2*mu)
+  theta <- (sigma*(1 - mu) + sqrt(sigma*sigma*(mu - 1)*(mu - 1) + 4*mu*sigma*(sigma + 1)))/(2*mu)
 
-  dens <- dwlindley(x=x, theta=theta,alpha=sigma,log = log.d)
+  dens <- dwlindley(x = x, theta = theta, alpha = sigma,log = log.d)
 
   dens
 }
@@ -209,10 +209,10 @@ dRWL <- function(x,mu=1,sigma=1,log.d=FALSE)
 #'@export
 
 
-pRWL <- function(q,mu=1,sigma=1,lower.tail=TRUE, log.p=FALSE)
+pRWL <- function(q, mu=1, sigma = 1,lower.tail = TRUE, log.p = FALSE)
 {
-  theta <- (sigma*(1-mu) + sqrt(sigma*sigma*(mu-1)*(mu-1) + 4*mu*sigma*(sigma+1)))/(2*mu)
-  cum <- pwlindley(q,theta=theta,alpha=sigma,lower.tail = lower.tail,log.p = log.p)
+  theta <- (sigma*(1 - mu) + sqrt(sigma*sigma*(mu - 1)*(mu - 1) + 4*mu*sigma*(sigma + 1)))/(2*mu)
+  cum <- pwlindley(q,theta = theta,alpha = sigma,lower.tail = lower.tail,log.p = log.p)
 
   cum
 }
