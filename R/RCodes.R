@@ -524,7 +524,7 @@ envelope.RWL <- function(model, k = 100, color = "grey50", xlabel = "Theorical Q
 #'
 #'@return Local influence measures.
 #'
-#' @author
+#'@author
 #'Manoel Santos-Neto \email{manoelferreira@uaest.ufcg.edu.br}
 #'
 #'@references
