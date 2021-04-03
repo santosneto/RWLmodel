@@ -88,11 +88,11 @@ RWL <- function (mu.link = "log" , sigma.link="log")
                  #the expected second derivative of the likelihood with respect to the location parameter mu
                  d2ldm2 = function(mu,sigma) {        #expected of second derivate of log-density respect to mu
 
-                   A_i <- -sigma + ((sigma^2)*(mu-1) + 2*sigma*(sigma+1))/sqrt((sigma^2)*((mu-1)^2) + 4*mu*sigma*(sigma+1) )
-                   b_mu_sigma <- (sigma*(1-mu) + sqrt(sigma*sigma*(mu-1)*(mu-1) + 4*mu*sigma*(sigma+1)))
+                   A_i <- -sigma + ((sigma^2)*(mu - 1) + 2*sigma*(sigma+1))/sqrt((sigma^2)*((mu-1)^2) + 4*mu*sigma*(sigma+1) )
+                   b_mu_sigma <- (sigma*(1 - mu) + sqrt(sigma*sigma*(mu-1)*(mu-1) + 4*mu*sigma*(sigma+1)))
                    dA_i <- (sigma^2)/sqrt((sigma^2)*((mu-1)^2) + 4*mu*sigma*(sigma+1) ) - ((sigma*sigma*(mu-1) + 2*sigma*(sigma+1))^2)/((sqrt((sigma^2)*((mu-1)^2) + 4*mu*sigma*(sigma+1) ))^3)
 
-                   part_1 <- (sigma+1)*(dA_i*b_mu_sigma - A_i*A_i)
+                   part_1 <- (sigma + 1)*(dA_i*b_mu_sigma - A_i*A_i)
                    part_1_d <- b_mu_sigma*b_mu_sigma
                    part_2 <- sigma
                    part_2_d <- mu*mu
@@ -166,7 +166,7 @@ RWL <- function (mu.link = "log" , sigma.link="log")
                  G.dev.incr = function(y,mu,sigma,...) -2*dRWL(y,mu,sigma,log.d = TRUE),
                  rqres = expression(rqres(pfun = "pRWL", type = "Continuous", y = y, mu = mu, sigma = sigma)),
                  mu.initial = expression({mu <- (y + mean(y)/2)  }),
-                 sigma.initial = expression({sigma <- rep(max(((var(y) - mean(y))/(mean(y)^2)), 0.1), length(y)) }),
+                 sigma.initial = expression({sigma <- rep(sd(y)/((mean(y))^1.5), length(y)) }),
                  mu.valid = function(mu) all(mu > 0) ,
                  sigma.valid = function(sigma) all(sigma > 0),
                  y.valid = function(y) all(y > 0),
