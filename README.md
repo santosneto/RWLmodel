@@ -14,4 +14,4 @@ devtools::install_github('santosneto/RWLmodel')
 
 
 ### Support or Contact
-santosnetoce@protonmail.com
+manoel.ferreira@professor.ufcg.edu.br
