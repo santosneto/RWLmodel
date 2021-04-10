@@ -4,14 +4,10 @@
 \alias{diag.RWL}
 \title{Diagnostic Analysis - Local Influence}
 \usage{
-diag.RWL(model, mu.link = "log", sigma.link = "log", scheme = "case.weight")
+diag.RWL(model, scheme = "case.weight")
 }
 \arguments{
 \item{model}{Object of class \code{gamlss} holding the fitted model.}
-
-\item{mu.link}{Defines the mu.link, with "identity" link as the default for the mu parameter.}
-
-\item{sigma.link}{Defines the sigma.link, with "identity" link as the default for the sigma parameter.}
 
 \item{scheme}{Default is "case.weight". But, can be "response".}
 }
