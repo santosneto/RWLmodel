@@ -618,8 +618,8 @@ diag.RWL <- function(model,mu.link = "log", sigma.link = "log", scheme="case.wei
 
     dldm       <- Deriv::Deriv(ll,'mu')
     dldd       <- Deriv::Deriv(ll,'sigma')
-    Deltamu    <- crossprod(x,diag(ai*dldm))
-    Deltasigma <- crossprod(z,diag(bi*dldd))
+    Deltamu    <- crossprod(x,diag(ai*dldm(y,mu,sigma) ))
+    Deltasigma <- crossprod(z,diag(bi*dldd(y,mu,sigma)))
     Delta      <- rbind(Deltamu,Deltasigma)
 
     ##################theta#########################
