@@ -518,10 +518,8 @@ envelope.RWL <- function(model, k = 100, color = "grey50", xlabel = "Theorical Q
 #'
 #'@param model Object of class \code{gamlss} holding the fitted model.
 #'@param scheme Default is "case.weight". But, can be "response".
-#'@param mu.link  Defines the mu.link, with "identity" link as the default for the mu parameter.
-#'@param sigma.link Defines the sigma.link, with "identity" link as the default for the sigma parameter.
-
 #'
+#' 
 #'@return Local influence measures.
 #'
 #'@author
@@ -534,7 +532,7 @@ envelope.RWL <- function(model, k = 100, color = "grey50", xlabel = "Theorical Q
 #'@importFrom stats make.link sd
 #'@export
 
-diag.RWL <- function(model,mu.link = "log", sigma.link = "log", scheme="case.weight")
+diag.RWL <- function(model, scheme = "case.weight")
 {
 
   x <- model$mu.x
@@ -543,17 +541,27 @@ diag.RWL <- function(model,mu.link = "log", sigma.link = "log", scheme="case.wei
   p <- ncol(x)
   q <- ncol(z)
 
-  linkstr <- mu.link
+  linkstr <- model$mu.link
   linkobj <- make.link(linkstr)
   linkfun <- linkobj$linkfun
   linkinv <- linkobj$linkinv
   mu.eta  <- linkobj$mu.eta
 
-  sigma_linkstr <- sigma.link
+  sigma_linkstr <- model$sigma.link
   sigma_linkobj <- make.link(sigma_linkstr)
   sigma_linkfun <- sigma_linkobj$linkfun
   sigma_linkinv <- sigma_linkobj$linkinv
   sigma_mu.eta  <- sigma_linkobj$mu.eta
+
+  mu <- model$mu.fv
+  sigma <- model$sigma.fv
+  eta <- linkfun(mu)
+  ai <- mu.eta(eta)
+  tau   <- sigma_linkfun(sigma)
+  bi    <- sigma_mu.eta(tau)
+  sigma2 <- sigma^2
+  a_us   <- sigma*(1 - mu) + sqrt(sigma2*((mu - 1)^2) + 4*mu*sigma*(sigma + 1))
+  sy    <- (((2*mu)/a_us)^2)*(((sigma + 1)*((a_us + 2*sigma)^2) - a_us^2)/((a_us + 2*mu*sigma)^2))
 
 
   B <- function(Delta,I,M)
@@ -602,12 +610,6 @@ diag.RWL <- function(model,mu.link = "log", sigma.link = "log", scheme="case.wei
   if (scheme == "case.weight")
   {
     ############################Case Weight####################################
-
-    mu <- model$mu.fv
-    sigma <- model$sigma.fv
-    eta <- linkfun(mu)
-    ai <- mu.eta(eta)
-
     ll       <- function(y,mu,sigma){
       sigma2 <- sigma^2
       a_us   <- sigma*(1 - mu) + sqrt(sigma2*((mu - 1)^2) + 4*mu*sigma*(sigma + 1))
@@ -622,7 +624,31 @@ diag.RWL <- function(model,mu.link = "log", sigma.link = "log", scheme="case.wei
     Deltasigma <- crossprod(z,diag(bi*dldd(y,mu,sigma)))
     Delta      <- rbind(Deltamu,Deltasigma)
 
-    ##################theta#########################
+    
+  }else{
+    ############################Response####################################
+   
+    ll       <- function(y,mu,sigma)
+                                   {
+      sigma2 <- sigma^2
+      a_us   <- sigma*(1 - mu) + sqrt(sigma2*((mu - 1)^2) + 4*mu*sigma*(sigma + 1))
+      fy     <- (sigma + 1)*log(a_us) + (sigma - 1)*log(y) + log(1 + y) - (a_us/(2*mu))*y - sigma*log(2*mu) - log(a_us + 2*mu*sigma) - lgamma(sigma)
+
+      fy
+    }
+
+    dymu     <- Deriv::Deriv(Deriv(ll,'mu'),'y')
+    dysigma  <- Deriv::Deriv(Deriv(ll,'sigma'),'y')
+    Deltamu  <- crossprod(x,diag(ai*dymu(y,mu,sigma)*sy))
+    p        <- ncol(x)
+    q        <- ncol(z)
+    Deltasigma <- crossprod(z,diag(bi*dysigma(y,mu,sigma)*sy))
+    Delta <- rbind(Deltamu,Deltasigma)
+
+  }
+
+
+##################theta#########################
     BT              <- B(Delta,solve(h0),B3)
     autovmaxthetaPC <- eigen(BT,symmetric = TRUE)$val[1]
     vetorpcthetaPC  <- eigen(BT,symmetric = TRUE)$vec[,1]
@@ -654,74 +680,6 @@ diag.RWL <- function(model,mu.link = "log", sigma.link = "log", scheme="case.wei
                    Ci.alpha = Cb.alpha,
                    Ci.theta = Cb.theta)
     return(result)
-  }
-
-  if (scheme == "response")
-  {
-    ############################Response####################################
-    mu    <- model$mu.fv
-    sigma <- model$sigma.fv
-    eta   <- linkfun(mu)
-
-    ai    <- mu.eta(eta)
-    tau   <- sigma_linkfun(sigma)
-    bi    <- sigma_mu.eta(tau)
-    sigma2 <- sigma^2
-    a_us   <- sigma*(1 - mu) + sqrt(sigma2*((mu - 1)^2) + 4*mu*sigma*(sigma + 1))
-    sy    <- (((2*mu)/a_us)^2)*(((sigma + 1)*((a_us + 2*sigma)^2) - a_us^2)/((a_us + 2*mu*sigma)^2))
-
-
-    ll       <- function(y,mu,sigma){
-      sigma2 <- sigma^2
-      a_us   <- sigma*(1 - mu) + sqrt(sigma2*((mu - 1)^2) + 4*mu*sigma*(sigma + 1))
-      fy     <- (sigma + 1)*log(a_us) + (sigma - 1)*log(y) + log(1 + y) - (a_us/(2*mu))*y - sigma*log(2*mu) - log(a_us + 2*mu*sigma) - lgamma(sigma)
-
-      fy
-    }
-
-    dymu     <- Deriv::Deriv(Deriv(ll,'mu'),'y')
-    dysigma  <- Deriv::Deriv(Deriv(ll,'sigma'),'y')
-    Deltamu  <- crossprod(x,diag(ai*dymu(y,mu,sigma)*sy))
-    p        <- ncol(x)
-    q        <- ncol(z)
-    Deltasigma <- crossprod(z,diag(bi*dysigma(y,mu,sigma)*sy))
-    Delta <- rbind(Deltamu,Deltasigma)
-
-    ###############thetas###########################
-    BT              <- B(Delta,solve(h0),B3)
-    autovmaxthetaPC <- eigen(BT,symmetric = TRUE)$val[1]
-    vetorthetaRP    <- eigen(BT,symmetric = TRUE)$vec[,1]
-    dmaxG.theta     <- abs(vetorthetaRP)
-    vCithetaRP      <- 2*abs(diag(BT))
-    Cb0             <- vCithetaRP
-    Cb.theta        <- Cb0/sum(Cb0)
-
-    #################betas##########################
-    BM              <- B(Delta,solve(h0),B1)
-    autovmaxbetaRP  <- eigen(BM,symmetric = TRUE)$val[1]
-    vetorbetaRP     <- eigen(BM,symmetric = TRUE)$vec[,1]
-    dmaxG.beta      <- abs(vetorbetaRP)
-    vCibetaRP       <- 2*abs(diag(BM))
-    Cb1             <- vCibetaRP
-    Cb.beta         <- Cb1/sum(Cb1)
-    ####################alpha#######################
-    BD              <- B(Delta,solve(h0),B2)
-    autovmaxdeltaRP <- eigen(BD,symmetric = TRUE)$val[1]
-    vetordeltaRP    <- eigen(BD,symmetric = TRUE)$vec[,1]
-    dmaxG.alpha     <- abs(vetordeltaRP)
-    vCideltaRP      <- 2*abs(diag(BD))
-    Cb2             <- vCideltaRP
-    Cb.alpha        <- Cb2/sum(Cb2)
-
-
-    result <- list(dmax.beta = dmaxG.beta,
-                   dmax.alpha = dmaxG.alpha,
-                   dmax.theta = dmaxG.theta,
-                   Ci.beta = Cb.beta,
-                   Ci.alpha = Cb.alpha,
-                   Ci.theta = Cb.theta)
-    return(result)
-  }
 
 
 }
