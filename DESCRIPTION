@@ -1,7 +1,7 @@
 Package: RWLmodel
 Type: Package
 Title: Weighted Lindley regression model
-Version: 0.0.9
+Version: 0.1.1
 Date: 2020-04-19
 Author: Manoel Santos Neto [aut, cre] 
 Maintainer: The package maintainer <yourself@somewhere.net>
