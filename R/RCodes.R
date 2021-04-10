@@ -681,10 +681,10 @@ diag.RWL <- function(model,mu.link = "log", sigma.link = "log", scheme="case.wei
 
     dymu     <- Deriv::Deriv(Deriv(ll,'mu'),'y')
     dysigma  <- Deriv::Deriv(Deriv(ll,'sigma'),'y')
-    Deltamu  <- crossprod(x,diag(ai*dymu*sy))
+    Deltamu  <- crossprod(x,diag(ai*dymu(y,mu,sigma)*sy))
     p        <- ncol(x)
     q        <- ncol(z)
-    Deltasigma <- crossprod(z,diag(bi*dysigma*sy))
+    Deltasigma <- crossprod(z,diag(bi*dysigma(y,mu,sigma)*sy))
     Delta <- rbind(Deltamu,Deltasigma)
 
     ###############thetas###########################
